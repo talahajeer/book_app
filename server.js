@@ -34,7 +34,7 @@ app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 // HELPER FUNCTIONS
 // Only show part of this to get students started
 function Book(info) {
-  console.log(info.imageLinks);
+  // console.log(info.imageLinks);
   const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
   this.image = info.imageLinks || placeholderImage;
   this.title = info.title || 'No title available';
@@ -63,8 +63,6 @@ function createSearch(request, response) {
 
   if (request.body.search[1] === 'title') { url += `+intitle:${request.body.search[0]}`; }
   if (request.body.search[1] === 'author') { url += `+inauthor:${request.body.search[0]}`; }
-
-  console.log({ url });
 
   superagent.get(url)
     .then(apiResponse => {
