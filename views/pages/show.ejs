@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Book Collection</title>
+  <link rel="stylesheet" href="styles/style.css">
+
+</head>
+
+<body>
+  <main>
+    <% searchResults.forEach( book=> { %>
+      <img src='<%= book.image.thumbnail %>' />
+      <h3>
+        <%= book.title %>
+      </h3>
+      <h5>
+        <%= book.authors %>
+      </h5>
+      <p>
+        <%= book.title %>
+      </p>
+      <% }) %>
+  </main>
+</body>
+
+</html>
