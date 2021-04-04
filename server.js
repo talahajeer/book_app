@@ -32,7 +32,6 @@ app.get('*', (request, response) => response.status(404).send('This route does n
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
 // HELPER FUNCTIONS
-// Only show part of this to get students started
 function Book(info) {
   // console.log(info.imageLinks);
   const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
@@ -49,12 +48,10 @@ function renderHomePage(request, response) {
 }
 
 function showForm(request, response) {
-  // console.log("inside of searches!!")
   response.render('pages/searches/new');
 }
 
 // No API key required
-// Console.log request.body and request.body.search
 function createSearch(request, response) {
   let url = 'https://www.googleapis.com/books/v1/volumes?q=';
 
