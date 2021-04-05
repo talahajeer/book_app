@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Book Collection</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/style.css">
-  </head>
-  <body>
-    <main>
-      <h4>My Book Collection</h4>
 
-    </main>
-  </body>
+<head>
+  <title>Book Collection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+  <header>
+    <%- include('../views/layout/header') %>
+  </header>
+  <main>
+    <h4>My Book Collection</h4>
+    <p>
+      You have <%= count %> saved locally.
+    </p>
+    <div>
+      <%- include('./books/detail') %>
+    </div>
+  </main>
+</body>
+
 </html>

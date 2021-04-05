@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS books;
+
+CREATE TABLE IF NOT EXISTS books
+(id SERIAL NOT NULL,
+author VARCHAR(255),
+title VARCHAR(255),
+isbn VARCHAR(255),
+image_url TEXT,
+description VARCHAR(255)
+);
