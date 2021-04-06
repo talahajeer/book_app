@@ -1,17 +1,32 @@
-<section>
-    <% result.forEach( book=> { %>
-        <img src='<%= book.image_url %>' />
-        <h3>
-          <%= book.title %>
-        </h3>
-        <h5>
-          <%= book.author %>
-        </h5>
-        <p>
-          <%= book.description %>
-        </p>
-        <p>
-          <%= book.isbn %>
-        </p>
-        <% }) %>
-</section>
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('../layout/head') %>
+
+  <body>
+    <header>
+      <%- include('.././layout/header') %>
+    </header>
+    <main>
+      <section>
+        <% result.forEach( book=> { %>
+          <img src='<%= book.image_url %>' />
+          <h3>
+            <%= book.title %>
+          </h3>
+          <h5>
+            <%= book.author %>
+          </h5>
+          <p>
+            <%= book.description %>
+          </p>
+          <p>
+            <%= book.isbn %>
+          </p>
+          <% }) %>
+      </section>
+    </main>
+    <%- include('.././layout/footer') %>
+  </body>
+
+</html>

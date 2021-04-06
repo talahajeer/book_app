@@ -1,1 +1,40 @@
-<%- include('detail') %>
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('./../../layout/head') %>
+
+  <body>
+    <header>
+      <%- include('./../../layout/header') %>
+    </header>
+    <main>
+      <h2>
+        Search Results
+      </h2>
+      <% searchResults.forEach( book=> { %>
+        <section>
+          <form action="/books" method="POST">
+
+            <input type="hidden" name="image" placeholder="image" value="<%= book.image %>" />
+            
+            <input type="hidden" name="title" placeholder="title" value="<%= book.title %>" />
+
+            <input type="hidden" name="author" placeholder="author" value="<%= book.author %>" />
+
+            <input name="description" placeholder="Add Description" value="<%= book.description %>"></input>
+
+            <input type="hidden" name="isbn" placeholder="isbn" value="<%= book.isbn %>" />
+
+
+            <input type="hidden" value="<%= book.isbn %>" name="isbn">
+
+            <button type="submit">Save Book</button>
+          </form>
+        </section>
+        <% }) %>
+
+    </main>
+    <%- include('./../../layout/footer') %>
+  </body>
+
+</html>

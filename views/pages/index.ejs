@@ -1,25 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <title>Book Collection</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles/style.css">
-</head>
+<%- include('../layout/head') %>
 
-<body>
-  <header>
-    <%- include('../views/layout/header') %>
-  </header>
-  <main>
-    <h4>My Book Collection</h4>
-    <p>
-      You have <%= count %> saved locally.
-    </p>
-    <div>
-      <%- include('./books/detail') %>
-    </div>
-  </main>
-</body>
+  <body>
+    <header>
+      <%- include('.././layout/header') %>
+    </header>
+    <main>
+      <h4>My Book Collection</h4>
+      <p>
+        You have <%= count %> saved locally.
+      </p>
+      <% booksList.forEach( book=>{ %>
+        <div>
+          <img src="<%= book.image_url%>" alt="">
+          <h4>
+            <%= book.title%>
+          </h4>
+          <h5>
+            <%= book.author%>
+          </h5>
+          <p>
+            <%= book.description%>
+          </p>
+          <form action="/books/detail/<%= book.id %>" method="GET">
+            <button>View Details</button>
+          </form>
+          </div>
+            <% }) %>
+    </main>
+    <%- include('.././layout/footer') %>
+  </body>
 
 </html>
