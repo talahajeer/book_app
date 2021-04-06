@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+
+  <main>
+
+    <h4>Update Book</h4>
+
+    <% book.forEach(book =>{ %>
+    <section>
+  <div>
+    <img src="<%= book.image_url %>" alt="">
+    <h1><%= book.title%></h1>
+    <h3><%= book.authors%></h3>
+    <p><%= book.description %></p>
+  </div>
+  <form action="/edit/<%= book.id %>?_method=PUT" method="POST">
+    <label for="">title</label>
+    <br>
+      <input type="text" name="title" placeholder=" Title"  value="<%=book.title%>">
+      <br>
+      <label for="">author</label>
+      <br>
+      <input type="text" name="author"  value="<%=book.authors%>">
+      <br>
+      <label for="">isbn</label>
+      <br>
+      <input type="text" name="isbn" placeholder="Populate ISBN"  value="<%=book.isbn%>">
+      <br>
+      <label for="">image_url</label>
+      <br>
+      <input type="text" name="image_url" placeholder="Populate Image URL" value="<%=book.image_url%>">
+      <br>
+      <label for="">description</label>
+      <br>
+      <input  id="description"  type="text" name="description"><%=book.description%></input> 
+      <br> 
+      <button type="submit">Update Book</button>
+  </form> 
+  </section>
+  <% }) %>
+  </main>
+</body>
+</html>
