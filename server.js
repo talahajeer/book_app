@@ -65,7 +65,7 @@ function Book(info) {
 // Note that .ejs file extension is not required
 
 function renderHomePage(request, response) {
-  let SQL = 'SELECT * FROM books;';
+  let SQL = 'SELECT books.*,author.name FROM books,author WHERE books.author_id=author.id;';
   client.query(SQL).then(result => {
     console.log(result.rows);
     response.render('./pages/index', { count: result.rowCount, booksList: result.rows });
@@ -104,11 +104,13 @@ function createSearch(request, response) {
 function getOneBook(request, response) {
 
   // console.log(request.params);
-  let SQL = `SELECT * FROM books WHERE id = $1;`;
+  let SQL = 'SELECT * FROM books join author on books.author_id = author.id WHERE books.id=$1';
   let val = [request.params.id];
   client.query(SQL, val).then(results => {
-    {console.log(results);
-      response.render(`pages/books/detail`, { results: results.rows })};
+    {
+      console.log(results);
+      response.render(`pages/books/detail`, { results: results.rows })
+    };
   }).catch((err) => {
     response.render('pages/error', { error: err });
   });
@@ -152,7 +154,7 @@ function addBook(request, response) {
 
 
 function handleData(request, response) {
-  let SQL = 'SELECT * FROM books WHERE id=$1;';
+  let SQL = 'SELECT * FROM books join author on books.author_id = author.id WHERE books.id=$1;';
   let id = request.params.id;
   let vals = [id];
   client.query(SQL, vals).then(result => {
@@ -166,9 +168,12 @@ function handleUpdate(request, response) {
   let id = request.params.id;
   let vals = [author, title, isbn, image_url, description, id];
 
-  client.query(SQL, vals).then(() => {
-    console.log('success!!!');
-    response.redirect(`/book/${id}`);
+  client.query(SQL, vals).then((result) => {
+    let newSQL = `UPDATE author SET name=$1 WHERE author.id =$2;`;
+    let val2 = [author, author_id];
+    client.query(newSQL, val2).then(results => {
+      response.redirect(`/book/${id}`);
+    });
   });
 };
 
