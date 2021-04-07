@@ -40,11 +40,11 @@ app.post('/books', addBook);
 
 
 // Edit a book data in the server
-app.get('/edit/:id',handleData);
-app.put('/edit/:id',handleUpdate);
+app.get('/edit/:id', handleData);
+app.put('/edit/:id', handleUpdate);
 
 // Delete a book from server
-app.delete('/books/:id',handleDelete);
+app.delete('/books/:id', handleDelete);
 
 // Catch-all
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
@@ -56,7 +56,7 @@ function Book(info) {
   const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
   this.image = info.imageLinks ? info.imageLinks.smallThumbnail : placeholderImage;
   this.title = info.title ? info.title : 'No title available';
-  this.authors = info.authors ? info.authors : 'No authors-names available';
+  this.authors = info.authors ? info.authors.join(" ") : 'No authors-names available';
   this.description = info.description ? info.description : 'No description available';
   this.isbn = info.industryIdentifiers ? info.industryIdentifiers[0].identifier : 'No isbn available';
   // console.log(this.isbn)
@@ -65,7 +65,7 @@ function Book(info) {
 // Note that .ejs file extension is not required
 
 function renderHomePage(request, response) {
-  let SQL = 'SELECT * FROM books;';
+  let SQL = 'SELECT books.*,author.name FROM books,author WHERE books.author_id=author.id;';
   client.query(SQL).then(result => {
     console.log(result.rows);
     response.render('./pages/index', { count: result.rowCount, booksList: result.rows });
@@ -90,7 +90,10 @@ function createSearch(request, response) {
     .then(apiResponse => {
       return apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo))
     })
-    .then(results => response.render('pages/searches/show', { searchResults: results }))
+    .then((results) => {
+      console.log(results);
+      response.render('pages/books/show', { searchResults: results })
+    })
     .catch((err) => {
       console.log("ERROR!!!!!");
       response.render('pages/error', { error: err });
@@ -101,10 +104,13 @@ function createSearch(request, response) {
 function getOneBook(request, response) {
 
   // console.log(request.params);
-  let SQL = `SELECT * FROM books WHERE id = $1;`;
-  let val = [req.params.id];
+  let SQL = 'SELECT * FROM books join author on books.author_id = author.id WHERE books.id=$1';
+  let val = [request.params.id];
   client.query(SQL, val).then(results => {
-    response.render(`pages/books/detail`, { results: result.rows });
+    {
+      console.log(results);
+      response.render(`pages/books/detail`, { results: results.rows })
+    };
   }).catch((err) => {
     response.render('pages/error', { error: err });
   });
@@ -112,49 +118,71 @@ function getOneBook(request, response) {
 
 function addBook(request, response) {
   let { image_url, title, author, description, isbn } = request.body;
-  let SQLInsertion = `INSERT INTO books (author,title,isbn,image_url,description) VALUES($1, $2, $3, $4, $5) RETURNING id;`;
-  let values = [author, title, isbn, image_url, description];
+  // console.log(request.body)
 
-  let SQL = `SELECT * FROM books WHERE title=$1;`;
-  let value = [title];
+  // insert into my database
+  const SQL1 = `SELECT * FROM author WHERE name =$1;`;
+  let values1 = [author];
 
-  client.query(SQL, value).then((results) => {
+  client.query(SQL1, values1).then((result) => {
 
-      res.redirect(`/book/${results.rows[0].id}`);
+    if (result.rowCount) {
+      let id = result.rows[0].id;
 
-    }).catch((err) => {
-      response.render('pages/error', { error: err });
+      const SQL = `INSERT INTO books (title, description,isbn,image_url,author_id) VALUES ($1, $2, $3, $4,$5) RETURNING *;`;
+      const values = [title, description, isbn, image_url, id];
+
+      client.query(SQL, values).then(() => {
+        response.redirect('/');
+      });
+
+    } else {
+      const SQLInsertion = `INSERT INTO author (name) VALUES ($1) RETURNING *;`;
+      let value = [author];
+      client.query(SQLInsertion, value).then((result) => {
+        let id = result.rows[0].id;
+        const SQL = `INSERT INTO books (title, description,isbn,image_url,author_id) VALUES ($1, $2, $3, $4,$5) RETURNING *;`;
+        const values = [title, description, isbn, image_url, id];
+        client.query(SQL, values).then(() => {
+          response.redirect('/');
+        });
+      });
+    }
+  })
+};
+
+
+
+function handleData(request, response) {
+  let SQL = 'SELECT * FROM books join author on books.author_id = author.id WHERE books.id=$1;';
+  let id = request.params.id;
+  let vals = [id];
+  client.query(SQL, vals).then(result => {
+    response.render('pages/books/edit', { results: result.rows[0] });
+  });
+};
+
+function handleUpdate(request, response) {
+  let SQL = 'UPDATE books SET author=$1 , title=$2, isbn=$3, image_url=$4, description=$5 WHERE id=$6';
+  let { author, title, isbn, image_url, description } = request.body;
+  let id = request.params.id;
+  let vals = [author, title, isbn, image_url, description, id];
+
+  client.query(SQL, vals).then((result) => {
+    let newSQL = `UPDATE author SET name=$1 WHERE author.id =$2;`;
+    let val2 = [author, author_id];
+    client.query(newSQL, val2).then(results => {
+      response.redirect(`/book/${id}`);
     });
-};
-
-
-function handleData(request,response){
-  let SQL='SELECT * FROM book WHERE id=$1;';
-  let id= request.params.id;
-  let vals=[id];
-  client.query(SQL,vals).then(result=>{
-    response.render('pages/books/edit',{results:result.rows});
   });
 };
 
-function handleUpdate(request,response){
-  let SQL ='UPDATE books SET author=$1 , title=$2, isbn=$3, image_url=$4, description=$5 WHERE id=$6';
-  let {author,title,isbn,image_url,description}=request.body;
-  let id= request.params.id;
-  let vals=[author,title,isbn,image_url,description,id];
-
-  client.query(SQL, vals).then(()=> {
-    console.log('success!!!');
-    response.redirect(`/books/${id}`);
-  });
-};
-
-function handleDelete(request,response){
-  const id=request.params.id;
-  console.log('deleting',id);
-  let SQL='DELETE FROM books WHERE id=$1;';
-  let vals=[id];
-  client.query(SQL,vals).then(()=>{
+function handleDelete(request, response) {
+  const id = request.params.id;
+  // console.log('deleting',id);
+  let SQL = 'DELETE FROM books WHERE id=$1;';
+  let vals = [id];
+  client.query(SQL, vals).then(() => {
     response.redirect('/');
   });
 };

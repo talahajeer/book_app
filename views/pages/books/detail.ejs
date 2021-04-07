@@ -1,32 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<%- include('../layout/head') %>
+<%- include('../../layout/head') %>
 
   <body>
     <header>
-      <%- include('.././layout/header') %>
+      <%- include('../../layout/header') %>
     </header>
     <main>
       <section>
-        <% result.forEach( book=> { %>
+        <% results.forEach( book=> { %>
           <img src='<%= book.image_url %>' />
           <h3>
-            <%= book.title %>
+             BOOK TITLE: <%= book.title %>
           </h3>
           <h5>
-            <%= book.author %>
+            BOOK AUTHOR: <%= book.author_id %>
           </h5>
           <p>
-            <%= book.description %>
+            BOOK DESCRIPTION: <%= book.description %>
           </p>
           <p>
-            <%= book.isbn %>
+           BOOK ISBN: <%= book.isbn %>
           </p>
+          <a href = "/edit/<%= book.id %>"><button>Update</button></a>
+
+          <form  action="/books/<%= book.id %>?_method=DELETE" method="POST">
+            <button type="submit">DELETE</button>
+        </form>
           <% }) %>
       </section>
     </main>
-    <%- include('.././layout/footer') %>
+    <%- include('../../layout/footer') %>
   </body>
 
 </html>

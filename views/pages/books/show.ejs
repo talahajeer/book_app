@@ -13,23 +13,24 @@
       </h2>
       <% searchResults.forEach( book=> { %>
         <section>
+          <fieldset>
+            <%= book.title%>
+            <img src="<%= book.image %>" alt="">
           <form action="/books" method="POST">
 
             <input type="hidden" name="image" placeholder="image" value="<%= book.image %>" />
             
             <input type="hidden" name="title" placeholder="title" value="<%= book.title %>" />
-
-            <input type="hidden" name="author" placeholder="author" value="<%= book.author %>" />
-
-            <input name="description" placeholder="Add Description" value="<%= book.description %>"></input>
-
+            
+            <input type="hidden" name="authors" placeholder="authors" value="<%= book.authors %>" />
+            
+            <input type="hidden" name="description" placeholder="Add Description" value="<%= book.description %>"></input>
+            
             <input type="hidden" name="isbn" placeholder="isbn" value="<%= book.isbn %>" />
-
-
-            <input type="hidden" value="<%= book.isbn %>" name="isbn">
-
+            
             <button type="submit">Save Book</button>
           </form>
+        </fieldset>
         </section>
         <% }) %>
 

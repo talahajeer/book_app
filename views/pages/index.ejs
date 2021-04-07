@@ -18,17 +18,11 @@
           <h4>
             <%= book.title%>
           </h4>
-          <h5>
-            <%= book.author%>
-          </h5>
-          <p>
-            <%= book.description%>
-          </p>
-          <form action="/books/detail/<%= book.id %>" method="GET">
-            <button>View Details</button>
+          <form action="/book/<%= book.id%>" method="GET">
+            <button type="submit">View Details</button>
           </form>
-          </div>
-            <% }) %>
+        </div>
+        <% }) %>
     </main>
     <%- include('.././layout/footer') %>
   </body>
