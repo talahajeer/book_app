@@ -1,45 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-
+  <%- include('../../layout/head') %>
 <body>
-
+  <header>
+    <%- include('../../layout/header') %>
+  </header>
   <main>
 
     <h4>Update Book</h4>
 
-    <% book.forEach(book =>{ %>
+    
     <section>
   <div>
-    <img src="<%= book.image_url %>" alt="">
-    <h1><%= book.title%></h1>
-    <h3><%= book.authors%></h3>
-    <p><%= book.description %></p>
+    <img src="<%= results.image_url %>" alt="">
+    <h1><%= results.title%></h1>
+    <h3><%= results.authors%></h3>
+    <p><%= results.description %></p>
   </div>
-  <form action="/edit/<%= book.id %>?_method=PUT" method="POST">
+  <form action="/edit/<%= results.id %>?_method=PUT" method="POST">
     <label for="">title</label>
     <br>
-      <input type="text" name="title" placeholder=" Title"  value="<%=book.title%>">
+      <input type="text" name="title" placeholder=" Title"  value="<%=results.title%>">
       <br>
       <label for="">author</label>
       <br>
-      <input type="text" name="author"  value="<%=book.authors%>">
+      <input type="text" name="author"  value="<%=results.authors%>">
       <br>
       <label for="">isbn</label>
       <br>
-      <input type="text" name="isbn" placeholder="Populate ISBN"  value="<%=book.isbn%>">
+      <input type="text" name="isbn" placeholder="Populate ISBN"  value="<%=results.isbn%>">
       <br>
       <label for="">image_url</label>
       <br>
-      <input type="text" name="image_url" placeholder="Populate Image URL" value="<%=book.image_url%>">
+      <input type="text" name="image_url" placeholder="Populate Image URL" value="<%=results.image_url%>">
       <br>
       <label for="">description</label>
       <br>
-      <input  id="description"  type="text" name="description"><%=book.description%></input> 
+      <input  id="description"  type="text" name="description"><%=results.description%></input> 
       <br> 
       <button type="submit">Update Book</button>
   </form> 
   </section>
-  <% }) %>
+  
   </main>
+  <%- include('../../layout/footer') %>
 </body>
 </html>
